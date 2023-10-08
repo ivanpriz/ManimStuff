@@ -137,15 +137,22 @@ class CustomLabeledDot(VGroup):
 
 
 class MoveDot(Scene):
-    def construct(self):
-        dot_c = LabeledDot(label="C")
-        label = Text("c")
-        always(label.next_to, dot_c, UP)
+    def create_dot_with_label(self, name: str, direction: np.array) -> Dot:
+        dot = Dot()
+        label = Text(name)
+        always(label.next_to, dot, direction)
         self.add(label)
-        dot_a = LabeledDot(label="A")
+        return dot
+
+    def construct(self):
+        dot_c = self.create_dot_with_label("C", UP)
+
+        dot_a = self.create_dot_with_label("A", LEFT)
+
         dot_a.move_to(np.array([-4, -2, 0]))
         dot_c.move_to(dot_a.get_center())
-        dot_b = LabeledDot(label="B")
+
+        dot_b = self.create_dot_with_label("B", RIGHT)
         dot_b.move_to(np.array([4, -2, 0]))
 
         # self.add(Text("Абакаба"))
@@ -183,92 +190,92 @@ class MoveDot(Scene):
             .move_to((dot_b.get_center() + dot_a.get_center())/2)
         )
 
-        # self.play(FadeOut(a_b_line))
-        #
-        # self.play(dot_c.animate(run_time=2).shift(UP*3))
-        #
-        # c_dot_pos = dot_c.get_center()
-        # a_c_line = Line(dot_a.get_center(), c_dot_pos)
-        # b_c_line = Line(dot_b.get_center(), c_dot_pos)
-        # a_c_line_center = (dot_a.get_center() + dot_c.get_center())/2
-        # b_c_line_center = (dot_b.get_center() + dot_c.get_center())/2
-        # self.play(AnimationGroup(FadeIn(a_c_line), FadeIn(b_c_line)))
-        #
-        # dot_i = LabeledDot(label="I")
-        # dot_j = LabeledDot(label="J")
-        # dot_i.move_to(a_c_line_center)
-        # dot_j.move_to(b_c_line_center)
-        # self.play(AnimationGroup(FadeIn(dot_i), FadeIn(dot_j)))
-        #
-        # run_time = 4
-        # num_of_runs = 2
-        # self.play(
-        #     AnimationGroup(
-        #         dot_i.animate.move_to(dot_a.get_center()),
-        #         dot_j.animate.move_to(dot_c.get_center()),
-        #         run_time=run_time/num_of_runs/2,
-        #         rate_func=linear,
-        #     )
-        # )
-        # self.play(
-        #     AnimationGroup(
-        #         MoveBetweenDots(
-        #             dot_i,
-        #             dot_a,
-        #             dot_c,
-        #             num_of_runs=num_of_runs,
-        #             run_time=run_time,
-        #             rate_func=linear,
-        #         ),
-        #         MoveBetweenDots(
-        #             dot_j,
-        #             dot_c,
-        #             dot_b,
-        #             num_of_runs=num_of_runs,
-        #             run_time=run_time,
-        #             rate_func=linear,
-        #         )
-        #     )
-        # )
-        # self.play(
-        #     AnimationGroup(
-        #         dot_i.animate.move_to(a_c_line_center),
-        #         dot_j.animate.move_to(b_c_line_center),
-        #         run_time=run_time / num_of_runs / 2,
-        #         rate_func=linear,
-        #     )
-        # )
-        #
-        # # i_j_line = Line(dot_i.get_center(), dot_j.get_center())
-        # # self.play(FadeIn(i_j_line))
-        # point_f = LabeledDot(label="F")
-        # point_f.move_to((dot_i.get_center() + dot_j.get_center())/2)
-        # self.play(FadeIn(point_f))
-        #
-        # self.play(QuadraticBezierFromMiddleToStart(
-        #     point_f,
-        #     point_a=dot_a,
-        #     point_b=dot_b,
-        #     point_c=dot_c,
-        #     point_i=dot_i,
-        #     point_j=dot_j,
-        #     line_a_c=a_c_line,
-        #     line_c_b=b_c_line,
-        #     # line_i_j=i_j_line,
-        #     run_time=2
-        # ))
-        #
-        # self.play(QuadraticBezierFromStartToFinish(
-        #     point_f,
-        #     point_a=dot_a,
-        #     point_b=dot_b,
-        #     point_c=dot_c,
-        #     point_i=dot_i,
-        #     point_j=dot_j,
-        #     line_a_c=a_c_line,
-        #     line_c_b=b_c_line,
-        #     # line_i_j=i_j_line,
-        #     run_time=4
-        # ))
+        self.play(FadeOut(a_b_line))
+
+        self.play(dot_c.animate(run_time=2).shift(UP*3))
+
+        c_dot_pos = dot_c.get_center()
+        a_c_line = Line(dot_a.get_center(), c_dot_pos)
+        b_c_line = Line(dot_b.get_center(), c_dot_pos)
+        a_c_line_center = (dot_a.get_center() + dot_c.get_center())/2
+        b_c_line_center = (dot_b.get_center() + dot_c.get_center())/2
+        self.play(AnimationGroup(FadeIn(a_c_line), FadeIn(b_c_line)))
+
+        dot_i = self.create_dot_with_label("I", DOWN)
+        dot_j = self.create_dot_with_label("J", DOWN)
+        dot_i.move_to(a_c_line_center)
+        dot_j.move_to(b_c_line_center)
+        self.play(AnimationGroup(FadeIn(dot_i), FadeIn(dot_j)))
+
+        run_time = 4
+        num_of_runs = 2
+        self.play(
+            AnimationGroup(
+                dot_i.animate.move_to(dot_a.get_center()),
+                dot_j.animate.move_to(dot_c.get_center()),
+                run_time=run_time/num_of_runs/2,
+                rate_func=linear,
+            )
+        )
+        self.play(
+            AnimationGroup(
+                MoveBetweenDots(
+                    dot_i,
+                    dot_a,
+                    dot_c,
+                    num_of_runs=num_of_runs,
+                    run_time=run_time,
+                    rate_func=linear,
+                ),
+                MoveBetweenDots(
+                    dot_j,
+                    dot_c,
+                    dot_b,
+                    num_of_runs=num_of_runs,
+                    run_time=run_time,
+                    rate_func=linear,
+                )
+            )
+        )
+        self.play(
+            AnimationGroup(
+                dot_i.animate.move_to(a_c_line_center),
+                dot_j.animate.move_to(b_c_line_center),
+                run_time=run_time / num_of_runs / 2,
+                rate_func=linear,
+            )
+        )
+
+        # i_j_line = Line(dot_i.get_center(), dot_j.get_center())
+        # self.play(FadeIn(i_j_line))
+        point_o = self.create_dot_with_label("O", UP)
+        point_o.move_to((dot_i.get_center() + dot_j.get_center())/2)
+        self.play(FadeIn(point_o))
+
+        self.play(QuadraticBezierFromMiddleToStart(
+            point_o,
+            point_a=dot_a,
+            point_b=dot_b,
+            point_c=dot_c,
+            point_i=dot_i,
+            point_j=dot_j,
+            line_a_c=a_c_line,
+            line_c_b=b_c_line,
+            # line_i_j=i_j_line,
+            run_time=2
+        ))
+
+        self.play(QuadraticBezierFromStartToFinish(
+            point_o,
+            point_a=dot_a,
+            point_b=dot_b,
+            point_c=dot_c,
+            point_i=dot_i,
+            point_j=dot_j,
+            line_a_c=a_c_line,
+            line_c_b=b_c_line,
+            # line_i_j=i_j_line,
+            run_time=4
+        ))
 
         self.wait(2)
